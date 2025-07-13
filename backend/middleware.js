@@ -2,11 +2,11 @@ const { JWT_SECRET } = require("./config");
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req,res,next) =>{
-      console.log(req.headers);
+      // console.log(req.headers);
 
     const authHeader = req.headers.authorization;
 //   console.log(authHeader);
-    if(!authHeader || !authHeader.startsWith('Bearer')){
+    if(!authHeader || !authHeader.startsWith('Bearer ')){
         return res.status(403).json({error:"autHeader not found"});
     }
 
