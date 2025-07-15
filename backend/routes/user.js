@@ -1,12 +1,14 @@
 const express = require("express");
 
 const router = express.Router();
-
+// const app = express();
 const zod = require("zod");
 const {User,Account} = require("../db");
 const jwt = require("jsonwebtoken")
-const JWT_SECRET = require("../config");
+const {JWT_SECRET} = require("../config");
 const  {authMiddleware} = require("../middleware");
+
+// app.use(express.json());
 
 //signup and sigin routes
 
