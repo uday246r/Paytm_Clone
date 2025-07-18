@@ -7,6 +7,7 @@ const {User,Account} = require("../db");
 const jwt = require("jsonwebtoken")
 const {JWT_SECRET} = require("../config");
 const  {authMiddleware} = require("../middleware");
+const argon2 = require("argon2");
 
 // app.use(express.json());
 
@@ -38,9 +39,11 @@ router.post("/signup", async(req,res)=>{
         })
     }
 
+    const hashedPassword = await argon2.hash(req.body.password);
+
     const user = await User.create({
         username: req.body.username,
-        password: req.body.password,
+        password: hashedPassword,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
     })
@@ -50,8 +53,8 @@ router.post("/signup", async(req,res)=>{
     
    await Account.create({
     userId,
-    balance:1+Math.random()*10000
-   })
+    balance: parseFloat((1 + Math.random() * 10000).toFixed(2))
+})
 
 //.......................................
 
@@ -80,25 +83,32 @@ router.post("/signin",async(req,res)=>{
 
     const user = await User.findOne({
         username: req.body.username,
-        password: req.body.password
     });
 
-    if(user){
+    if(!user){
+        return res.status(411).json({
+            message: "User not found"
+        });
+    }
+
+    const passwordMatch = await argon2.verify(user.password, req.body.password);
+    if(!passwordMatch){
+        return res.status(411).json({
+            message: "Invalid Credentials"
+        });
+    }
+
+    
         const token = jwt.sign({
             userId: user._id
         },JWT_SECRET);
 
         res.json({
-            message: "Signin Sucessfully",
+            message: "Signin Successfully",
             token: token
-        })
-        return;
-    }
+        });
+    });
 
-    res.status(411).json({
-        message: "Error while logging in"
-    })
-})
 
 const updateSchema = zod.object({
     password: zod.string().optional(),
@@ -106,16 +116,17 @@ const updateSchema = zod.object({
     lastName: zod.string().optional()
 })
 
-router.put("/",authMiddleware,async(req,res)=>{
+router.put("/update",authMiddleware,async(req,res)=>{
     const {success} = updateSchema.safeParse(req.body)
     if(!success){
-        res.status(411).json({
+        return res.status(411).json({
             message: "Error wile updating information"
         })
     }
-await User.updateOne(req.body, {
-        id: req.userId
-    })
+await User.updateOne(
+    {_id: req.userId},
+    {$set: req.body}
+);
     res.json({
         message:"Updated Successfully"
     })
@@ -143,11 +154,14 @@ router.get("/bulk",async(req,res)=>{
     const users = await User.find({
         $or:[{
             firstName:{
-                "$regex" : filter
+                "$regex" : filter,
+                "$options" : "i"
             }
         },{
             lastName:{
-                "$regex" : filter
+                "$regex" : filter,
+                "$options" : "i"
+
             }
         }]
     })
