@@ -111,26 +111,38 @@ router.post("/signin",async(req,res)=>{
 
 
 const updateSchema = zod.object({
-    password: zod.string().optional(),
-    firstName: zod.string().optional(),
-    lastName: zod.string().optional()
+    // password: zod.string().optional(),
+    // firstName: zod.string().optional(),
+    // lastName: zod.string().optional(),
+    balance: zod.string().optional()
 })
 
-router.put("/update",authMiddleware,async(req,res)=>{
-    const {success} = updateSchema.safeParse(req.body)
-    if(!success){
+router.put("/update", authMiddleware, async (req, res) => {
+    const { success } = updateSchema.safeParse(req.body);
+    if (!success) {
         return res.status(411).json({
-            message: "Error wile updating information"
-        })
+            message: "Error while updating information"
+        });
     }
-await User.updateOne(
-    {_id: req.userId},
-    {$set: req.body}
-);
+
+    const { balance } = req.body;
+
+    // 🟡 Only update Account, not User
+    if (balance !== undefined && balance !== "") {
+        await Account.updateOne(
+            { userId: req.userId },
+            { $inc: { balance: Number(balance) } }
+        );
+    } else {
+        return res.status(400).json({
+            message: "Balance is required"
+        });
+    }
+
     res.json({
-        message:"Updated Successfully"
-    })
-})
+        message: "Updated Successfully"
+    });
+});
 
 router.get("/me", authMiddleware, async (req, res) => {
     try {
