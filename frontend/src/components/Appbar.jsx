@@ -8,10 +8,15 @@ export const Appbar = ({ onMenuClick }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
+      const token = localStorage.getItem("token"); // <-- Add this line
+      if (!token) {
+        // Optionally redirect to login or handle missing token
+        return;
+      }
       try {
         const res = await axios.get("http://localhost:3000/api/v1/user/me", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+            Authorization: `Bearer ${token}`
           }
         });
         setUser(res.data);
@@ -36,7 +41,7 @@ export const Appbar = ({ onMenuClick }) => {
       </div>
 
       {user?.firstName && (
-      <div className="flex">
+      <div className="flex mr-2">
         <div className="flex flex-col justify-center h-full mr-4">
           Hello, {user?.firstName}
         </div>

@@ -8,7 +8,38 @@ export const SendMoney = () =>{
     const id = searchParams.get("id");
     const name = searchParams.get("name");
     const [amount, setAmount] = useState(0);
+    const [showToast,setShowToast] = useState(false);
     const navigate = useNavigate();
+
+    const handleTransfer = async () =>{
+                              try{
+                                   await axios.post("http://localhost:3000/api/v1/account/transfer",{
+                                    to: id,
+                                    amount
+                                },{
+                                    headers:{
+                                        Authorization: "Bearer " + localStorage.getItem("token")
+                                    }
+                                })
+                                
+                                setShowToast(true);
+                                setTimeout(()=>{
+                                    navigate("/dashboard");
+                                },1000)
+                             } catch(e){
+                            
+                                  <div className="toast toast-center toast-middle">
+
+                                 <div className="alert alert-error">
+                                   <span>Payment Fail.</span>
+                                 </div>
+                                 </div>
+                               }
+        
+
+                            }
+                            
+
 
     return(
         <div className="flex justify-center h-screen bg-gray-100">
@@ -40,26 +71,17 @@ export const SendMoney = () =>{
                                 placeholder="Enter amount"
                                 />
                             </div>
-                            <button onClick={()=>{
-                                try{
-                                    axios.post("http://localhost:3000/api/v1/account/transfer",{
-                                    to: id,
-                                    amount
-                                },{
-                                    headers:{
-                                        Authorization: "Bearer " + localStorage.getItem("token")
-                                    }
-                                })
-                                alert("Payment Sucessfull");
-                                navigate("/dashboard");
-                            } catch(e){
-                                alert("Payment Failed");
-                            }
-                            }} className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white"
+                            <button onClick={handleTransfer} className="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors h-10 px-4 py-2 w-full bg-green-500 text-white"
                             >Initiate Transfer</button>
                         </div>
                     </div>
                 </div>
+                {showToast &&<div className="toast toast-center toast-middle">
+
+                                 <div className="alert alert-success">
+                                   <span>Payment Successfull.</span>
+                                 </div>
+                               </div>}
             </div>
         </div>
     )

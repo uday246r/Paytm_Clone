@@ -14,7 +14,7 @@ async function fetchBalance(){
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
     })
-    setCurrentBalance(res.data.balance);
+    setCurrentBalance(res.data.balance.toFixed(2));
     }catch(err){
         console.error("Error fetching balance: ",err);
     }

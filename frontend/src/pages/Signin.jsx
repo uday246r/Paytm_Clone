@@ -4,16 +4,62 @@ import { SubHeading } from "../components/SubHeading"
 import { InputBox } from "../components/InputBox"
 import { Button } from "../components/Button"
 import { BottomWarning } from "../components/BottomWarning"
-import {Navigate,useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import axios from 'axios';
 
 export const Signin = () =>{
     const [ username, setUserName ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [showToast,setShowToast] = useState(false);
+    const [errorToast,setErrorToast] = useState(false);
+
     const navigate = useNavigate();
+
+    const handleSignin = async() =>{
+         try {
+                                const response = await axios.post("http://localhost:3000/api/v1/user/signin",{
+                                    username,
+                                    password
+                                });
+                                localStorage.setItem("token",response.data.token);
+                                setShowToast(true);
+setTimeout(() => {
+  setShowToast(false);
+  navigate("/dashboard");
+  window.location.reload();
+}, 1000);
+
+                            } catch (e) {
+                                setErrorToast(true)
+                                setTimeout(() => {
+        setErrorToast(false);
+    }, 2000);
+                            }
+                        }
+    
     return(
         <>
-        <div className="bg-slate-500 h-screen flex justify-center">
+
+        { errorToast &&  (
+                                 <div className="toast toast-center toast-middle">
+
+                                 <div className="alert alert-error">
+                                   <span>Invalid Credentials</span>
+                                 </div>
+                               </div>
+
+    )}
+
+        { showToast &&  (
+                                 <div className="toast toast-center toast-middle">
+
+                                 <div className="alert alert-success">
+                                   <span>Signin Successfully</span>
+                                 </div>
+                               </div>
+
+    )}
+        <div className="bg-slate-300 h-screen flex justify-center">
             <div className="flex flex-col justify-center">
                 <div className="bg-white rounded-lg w-80 text-center p-2 h-max px-4">
                         <Heading label={"Sign in"}/>
@@ -28,18 +74,7 @@ export const Signin = () =>{
                      />
 
                     <div>
-                        <Button onClick={async()=>{
-                            try {
-                                const response = await axios.post("http://localhost:3000/api/v1/user/signin",{
-                                    username,
-                                    password
-                                });
-                                localStorage.setItem("token",response.data.token);
-                                navigate("/dashboard")
-                            } catch (e) {
-                                alert("Sign in failed. Please check your credentials.");
-                            }
-                        }} label={"Sign in"}
+                        <Button onClick={handleSignin} label={"Sign in"}
                         />
                     </div>
                     <div>

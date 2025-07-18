@@ -3,10 +3,21 @@ import { Button } from '../components/Button'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { InputBox } from './InputBox'
+import Loading from './Loading'
 
 export const Users = ()=>{
     const [users, setUsers] = useState([]);
+    const [currentUser,setCurrentUser] = useState({});
     const [filter, setFilter] = useState("");
+    const [searchText, setSearchText] = useState("");
+
+    useEffect(()=>{
+        const debounceTimer = setTimeout(()=>{
+            setFilter(searchText);
+        },500);
+
+        return()=>clearTimeout(debounceTimer);
+    },[searchText]);
 
     useEffect(()=>{
         axios.get("http://localhost:3000/api/v1/user/bulk?filter="+filter)
@@ -15,26 +26,46 @@ export const Users = ()=>{
         })
     }, [filter])
 
+    useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/v1/user/me", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        setCurrentUser(res.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+    const filteredUsers = users.filter((users=>users.username!=currentUser.username))
+
     return (
-        <>
+        <div className="m-2">
             <div className="font-bold mt-6 text-lg">
-                 Users
+                 Friends
             </div>
             <div className="my-2">
                 <InputBox onChange={(e)=>{
-                    setFilter(e.target.value)
+                    setSearchText(e.target.value)
                 }}
                 placeholder="Search users..."
                 />
             </div>
             <div>
                 {
-                    users.map(user => (
+                  currentUser.username 
+                  ? filteredUsers.map(user => (
                         <User user={user}/>
                     ))
+                    : <Loading/>
                 }
             </div>
-        </>
+        </div>
     )
 }
 
@@ -48,7 +79,7 @@ function User({user}){
                         {user.firstName[0]}
                     </div>
                 </div>
-                <div className="felx flex-col mt-3 justify-center h-full">
+                <div className="flex flex-col justify-center h-full">
                     <div>
                         {user.firstName} {user.lastName}
                     </div>
