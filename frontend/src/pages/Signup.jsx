@@ -12,7 +12,34 @@ export const Signup = () =>{
     const [lastName,setLastName] = useState("");
     const [username,setUsername] = useState("");
     const [password,setPassword] = useState("");
+    const [showToast,setShowToast] = useState(false);
+    const [errorToast,setErrorToast] = useState(false);
+
     const navigate = useNavigate();
+
+    const handleSignup = async() =>{
+        try{
+
+                            const response = await axios.post("http://localhost:3000/api/v1/user/signup",{
+                                username,
+                                firstName,
+                                lastName,
+                                password
+                            });
+                            localStorage.setItem("token",response.data.token)
+                             setShowToast(true);
+setTimeout(() => {
+  setShowToast(false);
+  navigate("/dashboard");
+  window.location.reload();
+}, 1000);
+                           }catch(e){
+                             setErrorToast(true)
+                                setTimeout(() => {
+        setErrorToast(false);
+    }, 2000);
+                           }
+    }
 
     return(
         <div className='bg-slate-300 h-screen flex justify-center'>
@@ -37,20 +64,31 @@ export const Signup = () =>{
                     }} placeholder="Uday@123" label={"Password"}
                     />
                     <div>
-                        <Button onClick={async()=>{
-                            const response = await axios.post("http://localhost:3000/api/v1/user/signup",{
-                                username,
-                                firstName,
-                                lastName,
-                                password
-                            });
-                            localStorage.setItem("token",response.data.token)
-                            navigate("/dashboard")
-                        }} label={"Sign up"}
+                        <Button onClick={handleSignup} label={"Sign up"}
                         />
                     </div>
                     <BottomWarning label={"Already have an Account?"} buttonText={"Sign in"} to={"/signin"}/>
                 </div>
+
+                 { errorToast &&  (
+                                 <div className="toast toast-center toast-middle">
+
+                                 <div className="alert alert-error">
+                                   <span>Invalid Credentials</span>
+                                 </div>
+                               </div>
+
+    )}
+
+        { showToast &&  (
+                                 <div className="toast toast-center toast-middle">
+
+                                 <div className="alert alert-success">
+                                   <span>Signin Successfully</span>
+                                 </div>
+                               </div>
+
+    )}
             </div>
         </div>
     )

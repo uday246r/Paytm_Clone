@@ -12,6 +12,7 @@ import { SendMoney } from './pages/SendMoney';
 import ProtectedRoute from './components/ProtectedRoute';
 import { Appbar } from './components/Appbar';
 import { AppSidebar } from './components/Sidebar';
+import UpdateProfile from './pages/UpdateProfile';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -22,7 +23,7 @@ function App() {
       <AppSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <Routes>
         <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
+        <Route path="/" element={<Signin />} />
         <Route path="/dashboard" element={
           <ProtectedRoute>
             <Dashboard />
@@ -31,6 +32,11 @@ function App() {
         <Route path="/send" element={
           <ProtectedRoute>
             <SendMoney />
+          </ProtectedRoute>
+        } />
+        <Route path="/update" element={
+          <ProtectedRoute>
+            <UpdateProfile/>
           </ProtectedRoute>
         } />
       </Routes>

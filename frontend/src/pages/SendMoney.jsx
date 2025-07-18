@@ -9,6 +9,7 @@ export const SendMoney = () =>{
     const name = searchParams.get("name");
     const [amount, setAmount] = useState(0);
     const [showToast,setShowToast] = useState(false);
+    const [errorToast,setErrorToast] = useState(false);
     const navigate = useNavigate();
 
     const handleTransfer = async () =>{
@@ -25,15 +26,13 @@ export const SendMoney = () =>{
                                 setShowToast(true);
                                 setTimeout(()=>{
                                     navigate("/dashboard");
-                                },1000)
+                                },2000)
                              } catch(e){
                             
-                                  <div className="toast toast-center toast-middle">
-
-                                 <div className="alert alert-error">
-                                   <span>Payment Fail.</span>
-                                 </div>
-                                 </div>
+                                setErrorToast(true);
+                                setTimeout(()=>{
+                                    navigate("/dashboard");
+                                },2000)
                                }
         
 
@@ -76,6 +75,15 @@ export const SendMoney = () =>{
                         </div>
                     </div>
                 </div>
+                {
+                    errorToast && <div className="toast toast-center toast-middle">
+
+                    <div className="alert alert-error">
+                      <span>Payment Fail.</span>
+                    </div>
+                    </div>
+                }
+
                 {showToast &&<div className="toast toast-center toast-middle">
 
                                  <div className="alert alert-success">
