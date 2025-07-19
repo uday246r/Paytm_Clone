@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { InputBox } from './InputBox'
 import Loading from './Loading'
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
+
 export const Users = ()=>{
     const [users, setUsers] = useState([]);
     const [currentUser,setCurrentUser] = useState({});
@@ -20,7 +23,7 @@ export const Users = ()=>{
     },[searchText]);
 
     useEffect(()=>{
-        axios.get("http://localhost:3000/api/v1/user/bulk?filter="+filter)
+        axios.get(`${API_BASE}/api/v1/user/bulk?filter=${filter}`)
         .then(response=>{
             setUsers(response.data.user)
         })
@@ -29,7 +32,7 @@ export const Users = ()=>{
     useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/v1/user/me", {
+        const res = await axios.get(`${API_BASE}/api/v1/user/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }

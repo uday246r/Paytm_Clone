@@ -7,6 +7,9 @@ import {BottomWarning} from "../components/BottomWarning"
 import { Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios';
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
+
 export const Signup = () =>{
     const [firstName,setFirstName] = useState("");
     const [lastName,setLastName] = useState("");
@@ -20,7 +23,7 @@ export const Signup = () =>{
     const handleSignup = async() =>{
         try{
 
-                            const response = await axios.post("http://localhost:3000/api/v1/user/signup",{
+                            const response = await axios.post(`${API_BASE}/api/v1/user/signup`,{
                                 username,
                                 firstName,
                                 lastName,

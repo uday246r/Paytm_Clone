@@ -4,12 +4,14 @@ import { Balance } from "../components/Balance"
 import { Users } from "../components/Users"
 import axios from "axios"
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
 export const Dashboard = () =>{
     const [currentBalance,setCurrentBalance] = useState("");
 useEffect(()=>{
 async function fetchBalance(){
     try{
-    const res = await axios.get("http://localhost:3000/api/v1/account/balance",{
+    const res = await axios.get(`${API_BASE}/api/v1/account/balance`,{
         headers:{
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }

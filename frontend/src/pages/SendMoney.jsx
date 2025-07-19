@@ -3,6 +3,9 @@ import axios from "axios";
 import { useState }  from 'react';
 import { useNavigate } from 'react-router-dom'
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
+
 export const SendMoney = () =>{
     const [searchParams] = useSearchParams();
     const id = searchParams.get("id");
@@ -14,7 +17,7 @@ export const SendMoney = () =>{
 
     const handleTransfer = async () =>{
                               try{
-                                   await axios.post("http://localhost:3000/api/v1/account/transfer",{
+                                   await axios.post(`${API_BASE}/api/v1/account/transfer`,{
                                     to: id,
                                     amount
                                 },{

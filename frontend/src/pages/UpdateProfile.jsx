@@ -6,6 +6,9 @@ import { Heading } from '../components/Headings';
 import { SubHeading } from '../components/SubHeading';
 import { useNavigate } from 'react-router-dom';
 
+const API_BASE = process.env.REACT_APP_API_BASE;
+
+
 export default function UpdateProfile() {
     // const [firstName, setFirstName] = useState("");
     // const [lastName, setLastName] = useState("");
@@ -19,7 +22,7 @@ export default function UpdateProfile() {
         e.preventDefault();
         try {
             const token = localStorage.getItem("token");
-            const response = await axios.put("http://localhost:3000/api/v1/user/update", {
+            const response = await axios.put(`${API_BASE}/api/v1/user/update`, {
                 // firstName,
                 // lastName,
                 balance

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+const API_BASE = process.env.REACT_APP_API_BASE;
 
 export const Appbar = ({ onMenuClick }) => {
   const [user, setUser] = useState({});
@@ -14,7 +15,7 @@ export const Appbar = ({ onMenuClick }) => {
         return;
       }
       try {
-        const res = await axios.get("http://localhost:3000/api/v1/user/me", {
+        const res = await axios.get(`${API_BASE}/api/v1/user/me`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
