@@ -70,7 +70,7 @@ setTimeout(() => {
                         <Button onClick={handleSignup} label={"Sign up"}
                         />
                     </div>
-                    <BottomWarning label={"Already have an Account?"} buttonText={"Sign in"} to={"/signin"}/>
+                    <BottomWarning label={"Already have an Account?"} buttonText={"Sign in"} to={"/"}/>
                 </div>
 
                  { errorToast &&  (
