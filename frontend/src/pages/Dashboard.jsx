@@ -3,8 +3,8 @@ import { Appbar } from "../components/Appbar"
 import { Balance } from "../components/Balance"
 import { Users } from "../components/Users"
 import axios from "axios"
+import { API_BASE } from "../components/ConnectionURI"
 
-const API_BASE = process.env.REACT_APP_API_BASE;
 
 export const Dashboard = () =>{
     const [currentBalance,setCurrentBalance] = useState("");

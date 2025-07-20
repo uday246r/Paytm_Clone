@@ -6,7 +6,7 @@ import { Heading } from '../components/Headings';
 import { SubHeading } from '../components/SubHeading';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = process.env.REACT_APP_API_BASE;
+import { API_BASE } from "../components/ConnectionURI"
 
 
 export default function UpdateProfile() {

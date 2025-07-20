@@ -44,7 +44,11 @@ export function AppSidebar({ isOpen, onClose }) {
           <Menu iconShape="circle" className="m-4 ml-0">
             <MenuItem onClick={() => { navigate("/update"); onClose();  window.location.reload(); }}>Add Money</MenuItem>
             <MenuItem onClick={() => { navigate("/dashboard"); onClose();  window.location.reload();}}>Dashboard</MenuItem>
-            <MenuItem onClick={() => { navigate("/signup"); onClose();  window.location.reload();}}>Sign Up</MenuItem>
+            <MenuItem onClick={() => { 
+               localStorage.removeItem("token");
+               navigate("/signup"); 
+               onClose(); 
+               window.location.reload();}}>Sign Up</MenuItem>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </Sidebar>

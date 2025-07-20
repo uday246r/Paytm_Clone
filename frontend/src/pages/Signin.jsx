@@ -7,7 +7,7 @@ import { BottomWarning } from "../components/BottomWarning"
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios';
 
-const API_BASE = process.env.REACT_APP_API_BASE;
+import { API_BASE } from "../components/ConnectionURI"
 
 
 export const Signin = () =>{

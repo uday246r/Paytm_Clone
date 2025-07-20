@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { InputBox } from './InputBox'
 import Loading from './Loading'
 
-const API_BASE = process.env.REACT_APP_API_BASE;
+import { API_BASE } from "./ConnectionURI";
 
 
 export const Users = ()=>{
